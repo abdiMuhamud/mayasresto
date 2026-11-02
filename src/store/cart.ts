@@ -2,11 +2,9 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { site } from "@/lib/config";
 import { dishById } from "@/lib/menu";
-import type { OrderType } from "@/lib/whatsapp";
 
-/** dishId → quantity. Prices are always read from the menu, never stored. */
+/** dishId → quantity. Names, photos and any prices are always read from the menu. */
 type Quantities = Record<string, number>;
 
 interface CartState {
@@ -46,9 +44,9 @@ export const useCart = create<CartState>()(
     }),
     {
       name: "mayas-cart",
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
-      // Drop anything no longer on the menu.
+      // Drop anything no longer on the menu (e.g. after a menu update).
       merge: (persisted, current) => {
         const saved = (persisted as Partial<CartState> | undefined)?.items ?? {};
         const items: Quantities = {};
@@ -64,17 +62,16 @@ export const useCart = create<CartState>()(
 export interface CartLine {
   id: string;
   name: string;
-  image: string;
-  unitPrice: number;
+  image?: string;
+  unitPrice?: number;
   quantity: number;
-  lineTotal: number;
 }
 
 export function selectLines(items: Quantities): CartLine[] {
   return Object.entries(items).flatMap(([id, quantity]) => {
     const dish = dishById.get(id);
     if (!dish) return [];
-    return [{ id, name: dish.name, image: dish.image, unitPrice: dish.price, quantity, lineTotal: dish.price * quantity }];
+    return [{ id, name: dish.name, image: dish.image, unitPrice: dish.price, quantity }];
   });
 }
 
@@ -82,9 +79,8 @@ export function selectCount(items: Quantities) {
   return Object.values(items).reduce((n, q) => n + q, 0);
 }
 
-export function computeTotals(lines: CartLine[], orderType: OrderType) {
-  const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
-  const serviceCharge = Math.round(subtotal * site.pricing.serviceChargeRate);
-  const packagingFee = orderType === "Takeaway" && subtotal > 0 ? site.pricing.takeawayPackagingFee : 0;
-  return { subtotal, serviceCharge, packagingFee, total: subtotal + serviceCharge + packagingFee };
+/** Subtotal, only when every line has a price; otherwise the team confirms it. */
+export function knownSubtotal(lines: CartLine[]) {
+  if (!lines.length || lines.some((l) => l.unitPrice === undefined)) return null;
+  return lines.reduce((sum, l) => sum + (l.unitPrice ?? 0) * l.quantity, 0);
 }

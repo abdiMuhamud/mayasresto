@@ -1,22 +1,16 @@
 "use client";
 
-import { Clock, Mail, MapPin, Navigation } from "lucide-react";
+import { BookOpen, Clock, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { site } from "@/lib/config";
+import { formatTime12 } from "@/lib/format";
 import { isOpenNow } from "@/lib/hours";
 import { quickReserveMessage, whatsappUrl } from "@/lib/whatsapp";
-import { FacebookIcon, InstagramIcon, TripadvisorIcon, WhatsAppIcon } from "./icons";
+import { InstagramIcon, WhatsAppIcon } from "./icons";
 import { Reveal, SectionEyebrow } from "./Reveal";
 
-const week = [
-  { day: "Monday", open: true },
-  { day: "Tuesday", open: false },
-  { day: "Wednesday", open: true },
-  { day: "Thursday", open: true },
-  { day: "Friday", open: true },
-  { day: "Saturday", open: true },
-  { day: "Sunday", open: true },
-];
+const week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const weekdayIndex = (day: string) => (week.indexOf(day) + 1) % 7; // Monday → 1 … Sunday → 0
 
 const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.address.mapQuery)}&z=16&output=embed`;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(site.address.mapQuery)}`;
@@ -35,74 +29,75 @@ export function Location() {
     return () => clearInterval(t);
   }, []);
 
+  const hoursText = `${formatTime12(site.hours.open)} – ${formatTime12(site.hours.close)}`;
+
   return (
-    <section id="location" className="bg-sand py-20 sm:py-28">
+    <section id="location" className="bg-sand py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="max-w-2xl">
           <SectionEyebrow>Location &amp; Contact</SectionEyebrow>
-          <h2 className="font-serif text-4xl font-medium leading-[1.05] tracking-tight text-ink sm:text-6xl">
-            Find us on the <em className="text-clay">Strip</em>
+          <h2 className="font-serif text-5xl font-medium leading-[1] tracking-tight text-ink sm:text-7xl">
+            Find us in <em className="text-clay">Kololi</em>
           </h2>
         </Reveal>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-5">
           <Reveal className="lg:col-span-2">
-            <div className="flex h-full flex-col gap-6 rounded-3xl bg-ivory p-6 shadow-soft ring-1 ring-ink/5 sm:p-8">
-              <div className="flex gap-4">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-clay-soft text-clay">
-                  <MapPin size={19} />
-                </span>
-                <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-taupe">Address</h3>
-                  <p className="mt-1.5 font-serif text-xl leading-snug text-ink">
-                    {site.address.line1}
-                    <br />
-                    {site.address.line2}
-                  </p>
-                  <a
-                    href={directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-clay hover:text-clay-dark"
-                  >
-                    <Navigation size={14} /> Get directions
-                  </a>
-                </div>
-              </div>
+            <div className="flex h-full flex-col gap-7 rounded-[2rem] bg-white/80 p-6 shadow-soft ring-1 ring-ink/5 sm:p-8">
+              <Detail icon={<MapPin size={19} />} title="Address">
+                <p className="font-serif text-xl leading-snug text-ink">
+                  {site.address.line1}
+                  <br />
+                  {site.address.line2}
+                </p>
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-clay hover:text-clay-dark"
+                >
+                  <Navigation size={14} /> Get directions
+                </a>
+              </Detail>
 
-              <div className="flex gap-4">
-                <span className="grid size-11 shrink-0 place-items-center rounded-full bg-clay-soft text-clay">
-                  <Clock size={19} />
-                </span>
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-taupe">Opening hours</h3>
-                    {open !== null && (
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
-                          open ? "bg-emerald-50 text-emerald-700" : "bg-ink/5 text-taupe"
-                        }`}
-                      >
-                        <span className={`size-1.5 rounded-full ${open ? "animate-pulse bg-emerald-500" : "bg-taupe"}`} />
-                        {open ? "Open now" : "Closed now"}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1.5 font-serif text-xl text-ink">{site.hours.label}</p>
-                  <p className="text-sm font-semibold text-clay">{site.hours.closedLabel}</p>
-                  <ul className="mt-4 divide-y divide-ink/5 text-sm">
-                    {week.map((d) => (
+              <Detail
+                icon={<Clock size={19} />}
+                title="Opening hours"
+                badge={
+                  open !== null && (
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                        open ? "bg-emerald-50 text-emerald-700" : "bg-ink/5 text-taupe"
+                      }`}
+                    >
+                      <span className={`size-1.5 rounded-full ${open ? "animate-pulse bg-emerald-500" : "bg-taupe"}`} />
+                      {open ? "Open now" : "Closed now"}
+                    </span>
+                  )
+                }
+              >
+                <p className="font-serif text-xl text-ink">{site.meals}</p>
+                <ul className="mt-3 divide-y divide-ink/5 text-sm">
+                  {week.map((day) => {
+                    const closed = (site.hours.closedDays as readonly number[]).includes(weekdayIndex(day));
+                    return (
                       <li
-                        key={d.day}
-                        className={`flex justify-between py-1.5 ${d.day === today ? "font-semibold text-ink" : "text-taupe"}`}
+                        key={day}
+                        className={`flex justify-between py-1.5 ${day === today ? "font-semibold text-ink" : "text-taupe"}`}
                       >
-                        <span>{d.day}</span>
-                        <span>{d.open ? `${site.hours.open} – ${site.hours.close}` : "Closed"}</span>
+                        <span>{day}</span>
+                        <span className={closed ? "text-clay" : ""}>{closed ? "Closed" : hoursText}</span>
                       </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+                    );
+                  })}
+                </ul>
+              </Detail>
+
+              <Detail icon={<Phone size={19} />} title="Phone & WhatsApp">
+                <a href={site.phoneHref} className="font-serif text-xl text-ink hover:text-clay">
+                  {site.phoneDisplay}
+                </a>
+              </Detail>
 
               <div className="mt-auto flex flex-col gap-3 border-t border-ink/5 pt-6">
                 <a
@@ -125,11 +120,8 @@ export function Location() {
                   <SocialLink href={site.socials.instagram.url} label={`Instagram ${site.socials.instagram.handle}`}>
                     <InstagramIcon size={19} />
                   </SocialLink>
-                  <SocialLink href={site.socials.facebook.url} label="Facebook">
-                    <FacebookIcon size={19} />
-                  </SocialLink>
-                  <SocialLink href={site.socials.tripadvisor.url} label="Tripadvisor">
-                    <TripadvisorIcon size={21} />
+                  <SocialLink href={site.socials.directory.url} label={site.socials.directory.label}>
+                    <BookOpen size={18} />
                   </SocialLink>
                 </div>
               </div>
@@ -137,11 +129,11 @@ export function Location() {
           </Reveal>
 
           <Reveal delay={0.1} className="lg:col-span-3">
-            <div className="relative h-[380px] overflow-hidden rounded-3xl bg-ivory shadow-soft ring-1 ring-ink/5 sm:h-[460px] lg:h-full lg:min-h-[560px]">
+            <div className="relative h-[380px] overflow-hidden rounded-[2rem] bg-ivory shadow-soft ring-1 ring-ink/5 sm:h-[460px] lg:h-full lg:min-h-[600px]">
               <iframe
-                title={`Map showing ${site.name} on the Senegambia Strip, Kololi`}
+                title={`Map showing ${site.name} at The Oasis Complex, Kololi`}
                 src={mapSrc}
-                className="absolute inset-0 size-full border-0 grayscale-[35%] sepia-[15%]"
+                className="absolute inset-0 size-full border-0 grayscale-[25%]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
@@ -151,6 +143,31 @@ export function Location() {
         </div>
       </div>
     </section>
+  );
+}
+
+function Detail({
+  icon,
+  title,
+  badge,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  badge?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex gap-4">
+      <span className="grid size-11 shrink-0 place-items-center rounded-full bg-navy text-apricot">{icon}</span>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-taupe">{title}</h3>
+          {badge}
+        </div>
+        <div className="mt-1.5">{children}</div>
+      </div>
+    </div>
   );
 }
 
@@ -171,9 +188,10 @@ export function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
+      title={label}
       className={`grid size-11 place-items-center rounded-full transition ${
         dark
-          ? "bg-white/5 text-sand/80 ring-1 ring-white/10 hover:bg-white/10 hover:text-gold"
+          ? "bg-white/5 text-sand/80 ring-1 ring-white/10 hover:bg-white/10 hover:text-apricot"
           : "bg-sand text-ink ring-1 ring-ink/10 hover:bg-white hover:text-clay"
       }`}
     >

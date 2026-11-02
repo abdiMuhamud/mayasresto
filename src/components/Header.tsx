@@ -8,8 +8,8 @@ import { site } from "@/lib/config";
 import { useHydrated } from "@/lib/hooks";
 import { selectCount, useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
-import { heroSlides } from "./Hero";
-import { BrandMark, InstagramIcon, WhatsAppIcon } from "./icons";
+import { Logo } from "./Brand";
+import { InstagramIcon, WhatsAppIcon } from "./icons";
 
 const links = [
   { href: "#menu", label: "Menu" },
@@ -77,13 +77,13 @@ export function Header() {
         >
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8">
             <a href="#top" onClick={() => setMobileOpen(false)} className="group flex items-center gap-2.5" aria-label={`${site.name} — home`}>
-              <BrandMark size={36} />
-              <span className="flex flex-col leading-none">
-                <span className={`font-serif text-[1.7rem] font-semibold tracking-tight transition-colors ${light ? "text-sand" : "text-ink"}`}>
-                  Maya&apos;s
+              <Logo size={44} priority />
+              <span className="hidden flex-col leading-none sm:flex">
+                <span className={`font-serif text-[1.55rem] font-semibold tracking-tight transition-colors ${light ? "text-sand" : "text-ink"}`}>
+                  Maya&apos;s Resto
                 </span>
-                <span className={`mt-0.5 text-[9px] font-semibold uppercase tracking-[0.42em] ${light ? "text-gold" : "text-brass"}`}>
-                  Resto · Kololi
+                <span className={`mt-1 text-[9px] font-semibold uppercase tracking-[0.36em] ${light ? "text-apricot" : "text-clay"}`}>
+                  Kololi · The Gambia
                 </span>
               </span>
             </a>
@@ -174,14 +174,14 @@ export function Header() {
         {mobileOpen && (
           <motion.div
             id="mobile-nav"
-            className="fixed inset-0 z-40 flex flex-col overflow-hidden bg-ebony text-sand lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col overflow-hidden bg-navy-deep text-sand lg:hidden"
             initial={{ clipPath: "circle(0% at 92% 4%)" }}
             animate={{ clipPath: "circle(150% at 92% 4%)" }}
             exit={{ clipPath: "circle(0% at 92% 4%)" }}
             transition={{ duration: 0.8, ease: EASE }}
           >
             <div className="absolute inset-0 opacity-25">
-              <Image src={heroSlides[0].src} alt="" fill sizes="100vw" className="object-cover" />
+              <Image src="/images/terrace.webp" alt="" fill sizes="100vw" className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-b from-ebony/70 via-ebony/90 to-ebony" />
             </div>
             <nav aria-label="Mobile" className="relative flex flex-1 flex-col justify-center px-6 pt-20">
@@ -197,7 +197,7 @@ export function Header() {
                       transition={{ duration: 0.7, delay: 0.2 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
                       className="flex items-baseline gap-4 py-5 font-serif text-[2.25rem] leading-none sm:text-5xl"
                     >
-                      <span className="font-sans text-xs text-gold">0{i + 1}</span>
+                      <span className="font-sans text-xs text-apricot">0{i + 1}</span>
                       {l.label}
                     </motion.a>
                   </li>

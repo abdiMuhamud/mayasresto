@@ -16,8 +16,8 @@ export function openWhatsApp(message: string) {
   window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
 }
 
-export type SeatingPreference = "Indoor Air-Conditioned" | "Garden Terrace" | "Lounge Bar";
-export type Occasion = "None" | "Birthday" | "Anniversary" | "Business" | "Date Night" | "Other";
+export type SeatingPreference = "Indoor Dining Room" | "Outdoor Terrace" | "No preference";
+export type Occasion = "None" | "Birthday" | "Anniversary" | "Business" | "Family" | "Other";
 
 export interface ReservationDetails {
   name: string;
@@ -49,7 +49,7 @@ export type OrderType = "Takeaway" | "Dine-in pre-order";
 export interface OrderLine {
   name: string;
   quantity: number;
-  unitPrice: number;
+  unitPrice?: number;
 }
 
 export interface OrderDetails {
@@ -58,21 +58,13 @@ export interface OrderDetails {
   time: string;
   notes: string;
   lines: OrderLine[];
-  subtotal: number;
-  serviceCharge: number;
-  packagingFee: number;
-  total: number;
 }
 
+/** Order ticket. Prices appear only for dishes that have one; the team confirms the total. */
 export function buildOrderMessage(o: OrderDetails) {
   const items = o.lines.map(
-    (l) => `• ${l.quantity} × ${l.name} — ${formatGMD(l.unitPrice * l.quantity)}`,
+    (l) => `• ${l.quantity} × ${l.name}${l.unitPrice ? ` — ${formatGMD(l.unitPrice * l.quantity)}` : ""}`,
   );
-  const fees = [
-    `Subtotal: ${formatGMD(o.subtotal)}`,
-    `Service (${Math.round(site.pricing.serviceChargeRate * 100)}%): ${formatGMD(o.serviceCharge)}`,
-    o.packagingFee > 0 ? `Packaging: ${formatGMD(o.packagingFee)}` : "",
-  ].filter(Boolean);
 
   return [
     `Hello ${site.name}! I'd like to place an order.`,
@@ -83,12 +75,9 @@ export function buildOrderMessage(o: OrderDetails) {
     "",
     "*Order*",
     ...items,
-    "",
-    ...fees,
-    `*Total: ${formatGMD(o.total)}*`,
     o.notes.trim() ? `\n📝 Notes: ${o.notes.trim()}` : "",
     "",
-    "Please confirm availability. Thank you!",
+    "Please confirm availability and the total. Thank you!",
   ]
     .filter((line, i, arr) => !(line === "" && arr[i - 1] === ""))
     .join("\n")

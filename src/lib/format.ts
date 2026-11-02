@@ -1,20 +1,8 @@
-import { site } from "./config";
-
 const gmd = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 0 });
-const eur = new Intl.NumberFormat("en-GB", {
-  style: "currency",
-  currency: "EUR",
-  maximumFractionDigits: 0,
-});
 
 /** "D 1,250" — the dalasi sign used locally. */
 export function formatGMD(amount: number) {
   return `D ${gmd.format(Math.round(amount))}`;
-}
-
-/** "≈ €15" equivalent for visiting guests. */
-export function formatEUR(amount: number) {
-  return `≈ ${eur.format(amount / site.pricing.gmdPerEur)}`;
 }
 
 /** "Saturday, 14 Nov 2026" from a yyyy-mm-dd string (no timezone drift). */

@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, Check, Clock, Martini, Snowflake, TreePalm, Users, X } from "lucide-react";
+import { Armchair, Calendar, Check, Clock, Sparkles, Sun, Users, X } from "lucide-react";
 import { useId, useMemo, useState } from "react";
 import { site } from "@/lib/config";
 import { formatDateLong, formatTime12 } from "@/lib/format";
@@ -20,13 +20,13 @@ import { WhatsAppIcon } from "./icons";
 
 const guestOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "12+"];
 
-const seatingOptions: { value: SeatingPreference; icon: typeof Snowflake; hint: string }[] = [
-  { value: "Indoor Air-Conditioned", icon: Snowflake, hint: "Cool & calm" },
-  { value: "Garden Terrace", icon: TreePalm, hint: "Under the palms" },
-  { value: "Lounge Bar", icon: Martini, hint: "Cocktails & music" },
+const seatingOptions: { value: SeatingPreference; icon: typeof Armchair; hint: string }[] = [
+  { value: "Indoor Dining Room", icon: Armchair, hint: "Decorated & relaxed" },
+  { value: "Outdoor Terrace", icon: Sun, hint: "In the open air" },
+  { value: "No preference", icon: Sparkles, hint: "Wherever is free" },
 ];
 
-const occasions: Occasion[] = ["None", "Birthday", "Anniversary", "Business", "Date Night", "Other"];
+const occasions: Occasion[] = ["None", "Birthday", "Anniversary", "Business", "Family", "Other"];
 
 /** 30-minute slots from opening to last seating. */
 const timeSlots = (() => {
@@ -44,7 +44,7 @@ const emptyForm: ReservationDetails = {
   guests: "2",
   date: "",
   time: "19:30",
-  seating: "Garden Terrace",
+  seating: "Outdoor Terrace",
   occasion: "None",
   notes: "",
 };
@@ -121,9 +121,9 @@ export function ReservationModal() {
             className="relative flex max-h-[94svh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[2rem] bg-sand shadow-lift outline-none sm:rounded-[2rem]"
           >
             <div className="relative shrink-0 bg-ebony px-6 pb-6 pt-7 text-sand sm:px-8">
-              <div aria-hidden className="absolute -right-10 -top-16 size-48 rounded-full bg-clay/30 blur-3xl" />
+              <div aria-hidden className="absolute -right-10 -top-16 size-48 rounded-full bg-apricot/25 blur-3xl" />
               <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20 sm:hidden" />
-              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-brass">Reserve a table</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-apricot">Reserve a table</p>
               <h2 id={titleId} className="mt-1.5 font-serif text-3xl font-medium sm:text-4xl">
                 Join us at Maya&apos;s
               </h2>
@@ -184,7 +184,7 @@ export function ReservationModal() {
                       autoComplete="name"
                       value={form.name}
                       onChange={(e) => set("name", e.target.value)}
-                      placeholder="e.g. Fatou Jallow"
+                      placeholder="Your full name"
                       aria-invalid={!!errors.name}
                       className={inputClass(!!errors.name)}
                     />
@@ -335,7 +335,7 @@ export function ReservationModal() {
                       maxLength={400}
                       value={form.notes}
                       onChange={(e) => set("notes", e.target.value)}
-                      placeholder="Allergies, high chair, a surprise cake…"
+                      placeholder="Allergies, high chair, a birthday surprise…"
                       className={`${inputClass(false)} resize-none`}
                     />
                   </Field>

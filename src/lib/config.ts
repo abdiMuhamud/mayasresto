@@ -1,10 +1,10 @@
 /**
- * Central site configuration. Everything the restaurant may want to change
- * (contact details, hours, fees, exchange rate) lives here.
+ * Central site configuration. Facts here come from the restaurant's own Instagram
+ * (@mayasresto) and its My Gambia directory listing. Change them here only.
  */
 
 /**
- * WhatsApp number in international format, digits only (e.g. 2207XXXXXX).
+ * WhatsApp number in international format, digits only.
  * Set NEXT_PUBLIC_WHATSAPP_NUMBER in Vercel → Project → Settings → Environment Variables.
  * When unset, WhatsApp opens with the message pre-filled and lets the guest pick the chat.
  */
@@ -13,25 +13,29 @@ const rawWhatsApp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "";
 export const site = {
   name: "Maya's Resto",
   shortName: "Maya's",
-  tagline: "Coastal kitchen · Grill · Garden bar",
+  /** The restaurant's own line from its Instagram bio. */
+  tagline: "When different cuisines meet, there's more than just food to share.",
+  meals: "Breakfast · Lunch · Dinner",
   description:
-    "Bohemian-chic dining on the Senegambia Strip, Kololi. Fresh quinoa bowls, Argentinian-style grill, Atlantic seafood and artisanal cocktails.",
+    "Maya's Resto in Kololi, The Gambia: global fusion cooking with fresh vegetarian-friendly options, served for breakfast, lunch and dinner in a decorated dining room or on the open-air terrace.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://mayasresto.vercel.app",
 
   whatsappNumber: rawWhatsApp.replace(/\D/g, ""),
+  phoneDisplay: "+220 277 7737",
+  phoneHref: "tel:+2202777737",
 
   address: {
-    line1: "Senegambia Strip, Bertil Harding Highway",
+    line1: "The Oasis Complex, Bertil Harding Highway",
     line2: "Kololi, The Gambia",
-    mapQuery: "Maya's Resto, Senegambia, Kololi, The Gambia",
+    /** Google Maps has the restaurant listed by name, which drops the pin on it. */
+    mapQuery: "Maya's Resto, Kololi, The Gambia",
   },
 
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
 
   socials: {
     instagram: { handle: "@mayasresto", url: "https://www.instagram.com/mayasresto/" },
-    facebook: { url: "https://www.facebook.com/mayasresto" },
-    tripadvisor: { url: "https://www.tripadvisor.com/Search?q=Maya%27s%20Resto%20Kololi" },
+    directory: { label: "My Gambia directory", url: "https://www.my-gambia.com/directories/mayas-resto/" },
   },
 
   /** The Gambia runs on GMT all year (Africa/Banjul). */
@@ -45,15 +49,6 @@ export const site = {
     lastSeating: "21:30",
     /** 0 = Sunday … 6 = Saturday */
     closedDays: [2],
-  },
-
-  pricing: {
-    currency: "GMD",
-    /** Approximate dalasi per euro, used for the € equivalent shown on the menu. */
-    gmdPerEur: 82,
-    serviceChargeRate: 0.1,
-    takeawayPackagingFee: 75,
-    vatNote: "Menu prices include 15% VAT.",
   },
 } as const;
 

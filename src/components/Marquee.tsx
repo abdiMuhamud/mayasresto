@@ -52,8 +52,8 @@ function VelocityRow({ children, baseVelocity }: { children: React.ReactNode; ba
   );
 }
 
-const rowA = ["Wonjo Spritz", "Bife de Chorizo", "Tanji Catch", "Baobab Mojito", "Rainbow Quinoa", "Garlic Gambas"];
-const rowB = ["Garden", "Fire", "Sea", "Smoke", "Citrus", "Spice", "Palm Shade"];
+const rowA = ["Za'atar Manakish", "Falafel", "Shakshuka", "Grilled Prawns", "Banana Pancakes", "Hummus", "Sfouf"];
+const rowB = ["Breakfast", "Lunch", "Dinner", "Mezze", "Fresh Juice", "Terrace", "Kololi"];
 
 function Items({ words, outline }: { words: string[]; outline?: boolean }) {
   return (
@@ -61,7 +61,7 @@ function Items({ words, outline }: { words: string[]; outline?: boolean }) {
       {words.map((w) => (
         <span key={w} className="flex items-center">
           <span className={`px-6 font-serif italic sm:px-10 ${outline ? "text-outline-clay" : ""}`}>{w}</span>
-          <span className="text-[0.45em] not-italic text-gold">✦</span>
+          <span className="text-[0.4em] not-italic text-sage-deep">✦</span>
         </span>
       ))}
     </>

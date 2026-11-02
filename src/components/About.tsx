@@ -1,33 +1,32 @@
 "use client";
 
 import { animate, motion, useInView, useScroll, useTransform, type MotionValue } from "framer-motion";
-import { Flame, Leaf, Waves } from "lucide-react";
+import { Armchair, Leaf, Sunrise } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/config";
 import { formatTime12 } from "@/lib/format";
-import { dishes } from "@/lib/menu";
-import { BrandMark } from "./icons";
+import { LeafSprig, Logo } from "./Brand";
 import { Reveal, SectionEyebrow } from "./Reveal";
 
 const statement =
-  "We cook the way The Gambia eats: generously, outdoors and with whatever the morning brought in. Garden produce, open fire, the day's catch, and cocktails made with wonjo and baobab.";
+  "A home away from home on Bertil Harding Highway, loved by locals and visitors alike. Our menu brings different cuisines together, from manakish and mezze to grills, seafood and pancakes, with fresh vegetarian-friendly choices throughout.";
 
 const pillars = [
   {
+    icon: Sunrise,
+    title: "Breakfast to dinner",
+    text: "Open from 9:30 for breakfast, through long lunches, to dinner with friends.",
+  },
+  {
     icon: Leaf,
-    title: "Garden first",
-    text: "Bowls and salads built around produce from growers in Brikama and Lamin, with plenty for vegan guests.",
+    title: "Vegetarian-friendly",
+    text: "Falafel, hummus, manakish, fattoush and more, alongside grills and seafood.",
   },
   {
-    icon: Flame,
-    title: "Live-fire grill",
-    text: "An Argentinian-style parrilla burning hardwood, for steaks, skewers and sharing asado platters.",
-  },
-  {
-    icon: Waves,
-    title: "Atlantic catch",
-    text: "Fish and prawns bought each morning at Tanji and Bakau and cooked simply.",
+    icon: Armchair,
+    title: "Inside or out",
+    text: "A richly decorated dining room, or the open-air terrace among the plants.",
   },
 ];
 
@@ -40,15 +39,19 @@ export function About() {
   const { scrollYProgress: imgProgress } = useScroll({ target: imagesRef, offset: ["start end", "end start"] });
   const bigY = useTransform(imgProgress, [0, 1], ["-8%", "8%"]);
   const smallY = useTransform(imgProgress, [0, 1], ["25%", "-25%"]);
-  const badgeRotate = useTransform(imgProgress, [0, 1], [-60, 120]);
+  const badgeRotate = useTransform(imgProgress, [0, 1], [-90, 90]);
 
   return (
-    <section id="about" className="relative overflow-hidden bg-ivory py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionEyebrow>About Us</SectionEyebrow>
+    <section id="about" className="relative overflow-hidden bg-sand py-24 sm:py-32">
+      <div aria-hidden className="pointer-events-none absolute -right-16 top-16 w-72 opacity-70 sm:w-[28rem]">
+        <LeafSprig flip />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionEyebrow>About Maya&apos;s</SectionEyebrow>
         <p
           ref={textRef}
-          className="max-w-5xl font-serif text-[2rem] font-medium leading-[1.15] tracking-tight text-ink sm:text-5xl lg:text-[3.6rem]"
+          className="max-w-5xl font-serif text-[2rem] font-medium leading-[1.15] tracking-tight text-ink sm:text-5xl lg:text-[3.5rem]"
         >
           {words.map((w, i) => (
             <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
@@ -57,57 +60,54 @@ export function About() {
           ))}
         </p>
 
-        <div className="mt-20 grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+        <div className="mt-20 grid items-center gap-16 lg:grid-cols-12 lg:gap-10">
           <div ref={imagesRef} className="relative lg:col-span-7">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] shadow-lift sm:aspect-[5/4] sm:rounded-[2.5rem]">
+            <div className="relative ml-auto aspect-[4/5] w-[86%] overflow-hidden rounded-t-full rounded-b-[2rem] shadow-lift">
               <motion.div className="absolute inset-[-10%]" style={{ y: bigY }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?auto=format&fit=crop&w=1400&q=75"
-                  alt="Plant-filled dining room set for dinner"
+                  src="/images/dining-room.webp"
+                  alt="The decorated indoor dining room at Maya's Resto"
                   fill
-                  sizes="(min-width: 1024px) 700px, 100vw"
+                  sizes="(min-width: 1024px) 560px, 86vw"
                   className="object-cover"
                 />
               </motion.div>
             </div>
             <motion.div
               style={{ y: smallY }}
-              className="absolute -bottom-10 -right-2 w-[44%] overflow-hidden rounded-3xl border-[6px] border-ivory shadow-lift sm:-right-8"
+              className="absolute -bottom-10 left-0 w-[44%] overflow-hidden rounded-t-full rounded-b-3xl border-[6px] border-sand shadow-lift"
             >
               <div className="relative aspect-[3/4]">
                 <Image
-                  src="https://images.unsplash.com/photo-1581349485608-9469926a8e5e?auto=format&fit=crop&w=600&q=75"
-                  alt="Chef plating dishes at the pass"
+                  src="/images/terrace.webp"
+                  alt="The open-air terrace with flowers and palms"
                   fill
-                  sizes="300px"
+                  sizes="280px"
                   className="object-cover"
                 />
               </div>
             </motion.div>
-            <motion.div
-              style={{ rotate: badgeRotate }}
-              className="absolute -left-3 -top-8 grid size-28 place-items-center rounded-full bg-ebony shadow-lift sm:-left-8 sm:size-32"
-            >
-              <BrandMark size={58} />
+            <motion.div style={{ rotate: badgeRotate }} className="group absolute right-0 top-[-2rem] sm:-right-4">
+              <Logo size={104} />
             </motion.div>
           </div>
 
           <div className="lg:col-span-5">
             <Reveal>
               <h2 className="font-serif text-4xl font-medium leading-[1.05] tracking-tight text-ink sm:text-5xl">
-                A barefoot-luxury table on the <em className="text-clay">Smiling Coast</em>
+                {site.tagline.split(",")[0]}, <em className="text-clay">there&apos;s more</em> than just food to share
               </h2>
               <p className="mt-5 text-base leading-relaxed text-taupe sm:text-lg">
-                Maya&apos;s is a garden restaurant on the Senegambia Strip. Come for a long breakfast or lunch under the
-                palms, sundowners at the lounge bar, or a celebration dinner.
+                Find us in The Oasis Complex in Kololi. Settle into the dining room, or take a table on the terrace and
+                eat in the open air.
               </p>
             </Reveal>
 
             <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-ink/10 pt-8">
               <Stat label="Doors open" value={formatTime12(site.hours.open).replace(" ", "")} />
-              <Stat label="Dishes & drinks" count={dishes.length} />
-              <Stat label="Seating spaces" count={3} />
               <Stat label="Days a week" count={7 - site.hours.closedDays.length} />
+              <Stat label="Meals a day" count={3} />
+              <Stat label="Places to sit" count={2} />
             </dl>
           </div>
         </div>
@@ -115,8 +115,8 @@ export function About() {
         <div className="mt-24 grid gap-4 sm:grid-cols-3">
           {pillars.map((p, i) => (
             <Reveal key={p.title} delay={i * 0.1} className="h-full">
-              <div className="group h-full rounded-3xl bg-sand p-7 shadow-soft ring-1 ring-ink/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-lift">
-                <span className="grid size-12 place-items-center rounded-full bg-clay-soft text-clay transition-colors duration-500 group-hover:bg-clay group-hover:text-white">
+              <div className="group h-full rounded-3xl bg-white/70 p-7 shadow-soft ring-1 ring-ink/5 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-lift">
+                <span className="grid size-12 place-items-center rounded-full bg-sage-soft text-sage-deep transition-colors duration-500 group-hover:bg-navy group-hover:text-apricot">
                   <p.icon size={21} />
                 </span>
                 <h3 className="mt-5 font-serif text-2xl font-semibold text-ink">{p.title}</h3>
@@ -140,7 +140,7 @@ function Word({
   range: [number, number];
 }) {
   const opacity = useTransform(progress, range, [0.14, 1]);
-  const highlight = /wonjo|baobab|fire|catch|Gambia/i.test(children);
+  const highlight = /home|cuisines|manakish|vegetarian/i.test(children);
   return (
     <motion.span style={{ opacity }} className={`mr-[0.25em] inline-block ${highlight ? "italic text-clay" : ""}`}>
       {children}

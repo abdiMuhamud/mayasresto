@@ -5,11 +5,11 @@ import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useId, useMemo, useState } from "react";
 import { site } from "@/lib/config";
-import { formatEUR, formatGMD, formatTime12 } from "@/lib/format";
+import { formatGMD, formatTime12 } from "@/lib/format";
 import { useHydrated, useOverlay } from "@/lib/hooks";
 import { toMinutes } from "@/lib/hours";
 import { buildOrderMessage, openWhatsApp, type OrderType } from "@/lib/whatsapp";
-import { computeTotals, selectLines, useCart } from "@/store/cart";
+import { knownSubtotal, selectLines, useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
 import { WhatsAppIcon } from "./icons";
 
@@ -40,7 +40,8 @@ export function CartDrawer() {
   const [notes, setNotes] = useState("");
   const [nameError, setNameError] = useState(false);
 
-  const totals = computeTotals(lines, orderType);
+  const itemCount = lines.reduce((n, l) => n + l.quantity, 0);
+  const subtotal = knownSubtotal(lines);
 
   const sendOrder = () => {
     if (name.trim().length < 2) {
@@ -55,7 +56,6 @@ export function CartDrawer() {
         time,
         notes,
         lines: lines.map((l) => ({ name: l.name, quantity: l.quantity, unitPrice: l.unitPrice })),
-        ...totals,
       }),
     );
   };
@@ -133,8 +133,12 @@ export function CartDrawer() {
                           exit={{ opacity: 0, x: 40, transition: { duration: 0.2 } }}
                           className="flex gap-3 rounded-2xl bg-white p-2.5 shadow-soft ring-1 ring-ink/[0.04]"
                         >
-                          <span className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-ivory">
-                            <Image src={l.image} alt="" fill sizes="80px" className="object-cover" />
+                          <span className="relative grid size-20 shrink-0 place-items-center overflow-hidden rounded-t-full rounded-b-xl bg-navy">
+                            {l.image ? (
+                              <Image src={l.image} alt="" fill sizes="80px" className="object-cover" />
+                            ) : (
+                              <Image src="/brand/logo.webp" alt="" width={56} height={56} className="rounded-full" />
+                            )}
                           </span>
                           <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                             <div className="flex items-start justify-between gap-2">
@@ -170,7 +174,9 @@ export function CartDrawer() {
                                   <Plus size={14} />
                                 </button>
                               </div>
-                              <p className="text-sm font-bold text-ink tabular-nums">{formatGMD(l.lineTotal)}</p>
+                              {l.unitPrice !== undefined && (
+                                <p className="text-sm font-bold text-ink tabular-nums">{formatGMD(l.unitPrice * l.quantity)}</p>
+                              )}
                             </div>
                           </div>
                         </motion.li>
@@ -258,7 +264,7 @@ export function CartDrawer() {
                         maxLength={300}
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Steak medium-rare, no chilli…"
+                        placeholder="No chilli, extra flatbread…"
                         className="w-full resize-none rounded-xl bg-white px-3 py-2.5 text-sm outline-none ring-1 ring-ink/10 transition focus:ring-2 focus:ring-clay"
                       />
                     </div>
@@ -266,24 +272,17 @@ export function CartDrawer() {
                 </div>
 
                 <footer className="shrink-0 border-t border-ink/5 bg-sand px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 sm:px-7">
-                  <dl className="space-y-1.5 text-sm">
-                    <Row label="Subtotal" value={formatGMD(totals.subtotal)} />
-                    <Row
-                      label={`Service charge (${Math.round(site.pricing.serviceChargeRate * 100)}%)`}
-                      value={formatGMD(totals.serviceCharge)}
-                    />
-                    {totals.packagingFee > 0 && <Row label="Takeaway packaging" value={formatGMD(totals.packagingFee)} />}
-                    <div className="flex items-baseline justify-between border-t border-dashed border-ink/10 pt-2.5">
-                      <dt className="font-semibold text-ink">Total</dt>
-                      <dd className="text-right">
-                        <span className="font-serif text-2xl font-semibold text-ink tabular-nums">
-                          {formatGMD(totals.total)}
-                        </span>
-                        <span className="ml-2 text-xs text-taupe">{formatEUR(totals.total)}</span>
-                      </dd>
-                    </div>
-                  </dl>
-                  <p className="mt-1 text-[11px] text-taupe">{site.pricing.vatNote} Pay on pickup or at your table.</p>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-sm text-taupe">
+                      {itemCount} {itemCount === 1 ? "item" : "items"}
+                    </span>
+                    {subtotal !== null && (
+                      <span className="font-serif text-2xl font-semibold text-ink tabular-nums">{formatGMD(subtotal)}</span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs leading-relaxed text-taupe">
+                    We&apos;ll confirm prices, the total and timing when we reply on WhatsApp. Pay on pickup or at your table.
+                  </p>
                   <button
                     type="button"
                     onClick={sendOrder}
@@ -298,14 +297,5 @@ export function CartDrawer() {
         </div>
       )}
     </AnimatePresence>
-  );
-}
-
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between text-taupe">
-      <dt>{label}</dt>
-      <dd className="tabular-nums">{value}</dd>
-    </div>
   );
 }

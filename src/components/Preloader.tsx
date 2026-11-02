@@ -2,16 +2,19 @@
 
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
+import { site } from "@/lib/config";
 import { useUI } from "@/store/ui";
-import { BrandMark } from "./icons";
+import { LeafSprig, Logo } from "./Brand";
+import { RotatingBadge } from "./icons";
 
 const SEEN_KEY = "mayas-intro";
 const EASE = [0.76, 0, 0.24, 1] as const;
 
 /**
- * First-visit intro: the sun mark spins up, the name rises letter by letter while a
- * counter runs to 100, then the curtain lifts onto the hero. Skipped on repeat visits
- * in the same session (see the inline script in layout.tsx) and for reduced motion.
+ * First-visit intro on the logo's navy: the real logo spins in inside a turning
+ * "Breakfast · Lunch · Dinner" ring, leaves grow in, the tagline rises and a counter
+ * runs to 100 before the curtain lifts. Skipped on repeat visits in the same session
+ * (see the inline script in layout.tsx) and for reduced motion.
  */
 export function Preloader() {
   const setIntroDone = useUI((s) => s.setIntroDone);
@@ -31,13 +34,12 @@ export function Preloader() {
       setIntroDone();
       return;
     }
-    const controls = animate(progress, 100, { duration: 2.1, ease: [0.65, 0, 0.35, 1] });
+    const controls = animate(progress, 100, { duration: 2.2, ease: [0.65, 0, 0.35, 1] });
     controls.then(() => {
       try {
         sessionStorage.setItem(SEEN_KEY, "1");
       } catch {}
       setPhase("leaving");
-      // Let the hero start its entrance while the curtain is still lifting.
       setTimeout(setIntroDone, 350);
       setTimeout(() => setPhase("gone"), 1200);
     });
@@ -46,56 +48,66 @@ export function Preloader() {
 
   if (phase === "gone") return null;
 
-  const name = "Maya's";
+  const words = ["When", "different", "cuisines", "meet"];
 
   return (
     <motion.div
-      className="intro-loader fixed inset-0 z-[100] flex flex-col items-center justify-center bg-ebony text-sand"
+      className="intro-loader fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-navy-deep text-sand"
       initial={false}
       animate={phase === "leaving" ? { clipPath: "inset(0 0 100% 0)" } : { clipPath: "inset(0 0 0% 0)" }}
       transition={{ duration: 1, ease: EASE }}
       aria-hidden
     >
-      <div aria-hidden className="absolute left-1/2 top-1/2 size-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-clay/15 blur-3xl" />
+      <div className="absolute left-1/2 top-1/2 size-[70vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-navy-soft/60 blur-3xl" />
 
       <motion.div
-        initial={{ scale: 0.4, opacity: 0, rotate: -120 }}
-        animate={{ scale: 1, opacity: 1, rotate: 0 }}
-        transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute -left-8 top-[18%] w-56 sm:w-80"
+        initial={{ opacity: 0, x: -60, rotate: -12 }}
+        animate={{ opacity: 0.9, x: 0, rotate: 0 }}
+        transition={{ duration: 1.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       >
-        <BrandMark size={84} />
+        <LeafSprig />
+      </motion.div>
+      <motion.div
+        className="absolute -right-8 bottom-[20%] w-56 sm:w-80"
+        initial={{ opacity: 0, x: 60, rotate: 12 }}
+        animate={{ opacity: 0.9, x: 0, rotate: 0 }}
+        transition={{ duration: 1.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <LeafSprig flip />
       </motion.div>
 
-      <h2 className="mt-7 flex overflow-hidden font-serif text-6xl font-medium tracking-tight sm:text-8xl">
-        {name.split("").map((ch, i) => (
-          <motion.span
-            key={i}
-            className="inline-block"
-            initial={{ y: "110%" }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.9, delay: 0.35 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {ch}
-          </motion.span>
-        ))}
-      </h2>
-      <motion.p
-        className="mt-3 text-[11px] font-semibold uppercase tracking-[0.5em] text-gold"
-        initial={{ opacity: 0, letterSpacing: "0.9em" }}
-        animate={{ opacity: 1, letterSpacing: "0.5em" }}
-        transition={{ duration: 1.4, delay: 0.7 }}
+      <motion.div
+        initial={{ scale: 0.3, opacity: 0, rotate: -270 }}
+        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative text-apricot"
       >
-        Resto · Kololi
-      </motion.p>
+        <RotatingBadge size={210} text="Breakfast ✦ Lunch ✦ Dinner ✦ ">
+          <Logo size={128} ring={false} priority />
+        </RotatingBadge>
+      </motion.div>
+
+      <p className="relative mt-8 flex flex-wrap justify-center gap-x-[0.3em] overflow-hidden px-6 font-serif text-3xl italic text-sand sm:text-5xl">
+        {words.map((w, i) => (
+          <span key={w} className="inline-block overflow-hidden pb-1">
+            <motion.span
+              className="inline-block"
+              initial={{ y: "110%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.6 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {w}
+            </motion.span>
+          </span>
+        ))}
+      </p>
 
       <div className="absolute inset-x-6 bottom-8 flex items-end justify-between text-sand/50 sm:inset-x-10 sm:bottom-10">
-        <p className="text-[10px] uppercase tracking-[0.3em]">Senegambia Strip · The Gambia</p>
-        <motion.p className="font-serif text-5xl tabular-nums text-sand sm:text-7xl">{counter}</motion.p>
+        <p className="text-[10px] uppercase tracking-[0.3em]">{site.address.line2}</p>
+        <motion.p className="font-serif text-5xl tabular-nums text-apricot sm:text-7xl">{counter}</motion.p>
       </div>
-      <motion.div
-        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-clay via-gold to-clay"
-        style={{ width: barWidth }}
-      />
+      <motion.div className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-sage via-apricot to-sage" style={{ width: barWidth }} />
     </motion.div>
   );
 }

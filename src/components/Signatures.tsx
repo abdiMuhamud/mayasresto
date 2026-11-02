@@ -4,17 +4,17 @@ import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Plus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { formatEUR, formatGMD } from "@/lib/format";
-import { dishById, type Dish } from "@/lib/menu";
+import { categories, featured, type Dish } from "@/lib/menu";
 import { useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
+import { LeafSprig } from "./Brand";
 
-const picks = ["asado-platter", "catch-of-the-day", "rainbow-quinoa", "wonjo-spritz", "gambas-ajillo"];
-const signatures = picks.map((id) => dishById.get(id)).filter((d): d is Dish => !!d);
+const categoryLabel = new Map(categories.map((c) => [c.id, c.label]));
 
 /**
- * "The Signatures": on large screens the section pins and vertical scrolling drives a
- * horizontal gallery. On touch/small screens it is a native swipeable strip.
+ * "From our kitchen": real dishes from the restaurant. On large screens the section
+ * pins and vertical scrolling drives a horizontal gallery; on small screens it is a
+ * native swipeable strip.
  */
 export function Signatures() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -56,13 +56,13 @@ export function Signatures() {
   return (
     <section
       ref={sectionRef}
-      id="signatures"
-      aria-labelledby="signatures-title"
-      className="relative overflow-x-clip bg-ebony text-sand"
+      id="kitchen"
+      aria-labelledby="kitchen-title"
+      className="relative overflow-x-clip bg-navy-deep text-sand"
       style={pinned && height ? { height } : undefined}
     >
       <div className={pinned ? "sticky top-0 flex h-screen flex-col justify-center overflow-hidden" : "py-20 sm:py-24"}>
-        <div aria-hidden className="pointer-events-none absolute -left-40 top-1/4 size-[36rem] rounded-full bg-clay/15 blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -left-40 top-1/4 size-[36rem] rounded-full bg-navy-soft/70 blur-3xl" />
 
         <motion.div
           ref={trackRef}
@@ -71,16 +71,18 @@ export function Signatures() {
             pinned ? "" : "no-scrollbar snap-x snap-mandatory scroll-px-4 overflow-x-auto sm:scroll-px-6"
           }`}
         >
-          {/* Intro panel */}
-          <div className="flex w-[82vw] shrink-0 snap-start flex-col justify-center sm:w-[60vw] lg:w-[34vw] lg:pr-10">
-            <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-brass">
-              <span className="h-px w-8 bg-current" /> The Signatures
+          <div className="relative flex w-[82vw] shrink-0 snap-start flex-col justify-center sm:w-[60vw] lg:w-[32vw] lg:pr-10">
+            <div aria-hidden className="mb-6 w-40 opacity-90">
+              <LeafSprig />
+            </div>
+            <p className="mb-5 inline-flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.3em] text-apricot">
+              <span className="h-px w-8 bg-current" /> From our kitchen
             </p>
-            <h2 id="signatures-title" className="font-serif text-5xl font-medium leading-[0.98] tracking-tight sm:text-6xl xl:text-7xl">
-              Five plates that <em className="text-gold">define</em> Maya&apos;s
+            <h2 id="kitchen-title" className="font-serif text-5xl font-medium leading-[0.98] tracking-tight sm:text-6xl xl:text-7xl">
+              Plates our <em className="text-apricot">guests</em> come back for
             </h2>
             <p className="mt-6 max-w-sm text-base leading-relaxed text-sand/60">
-              The dishes our regulars order again and again. Add any of them to your order from here.
+              Straight from the Maya&apos;s kitchen. Add any of them to your order from here.
             </p>
             <p className="mt-10 hidden items-center gap-3 text-xs uppercase tracking-[0.25em] text-sand/40 lg:flex">
               Keep scrolling
@@ -90,15 +92,15 @@ export function Signatures() {
             </p>
           </div>
 
-          {signatures.map((dish, i) => (
-            <SignatureCard key={dish.id} dish={dish} index={i} />
+          {featured.map((dish, i) => (
+            <KitchenCard key={dish.id} dish={dish} index={i} />
           ))}
           <div aria-hidden className="w-1 shrink-0 lg:w-[4vw]" />
         </motion.div>
 
         {pinned && (
           <div className="absolute inset-x-[6vw] bottom-10 h-px bg-white/10">
-            <motion.div className="h-full bg-gradient-to-r from-clay to-gold" style={{ width: bar }} />
+            <motion.div className="h-full bg-gradient-to-r from-sage to-apricot" style={{ width: bar }} />
           </div>
         )}
       </div>
@@ -106,7 +108,7 @@ export function Signatures() {
   );
 }
 
-function SignatureCard({ dish, index }: { dish: Dish; index: number }) {
+function KitchenCard({ dish, index }: { dish: Dish & { image: string }; index: number }) {
   const add = useCart((s) => s.add);
   const pushToast = useUI((s) => s.pushToast);
 
@@ -116,31 +118,27 @@ function SignatureCard({ dish, index }: { dish: Dish; index: number }) {
   };
 
   return (
-    <article className="group relative flex w-[82vw] shrink-0 snap-start flex-col sm:w-[52vw] lg:w-[30vw] xl:w-[27vw]">
+    <article className="group relative flex w-[78vw] shrink-0 snap-start flex-col sm:w-[46vw] lg:w-[25vw] xl:w-[23vw]">
       <div
-        className="relative h-[58vh] max-h-[620px] min-h-[380px] overflow-hidden rounded-[2rem] bg-ebony-soft"
+        className="relative h-[58vh] max-h-[560px] min-h-[380px] overflow-hidden rounded-t-full rounded-b-[2rem] bg-navy ring-1 ring-white/10"
         data-cursor="Add"
         onClick={onAdd}
       >
         <Image
-          src={dish.image.replace("w=900", "w=1200")}
+          src={dish.image}
           alt={dish.name}
           fill
-          sizes="(min-width: 1024px) 30vw, 82vw"
+          sizes="(min-width: 1024px) 25vw, 78vw"
           className="object-cover transition-transform duration-[1.4s] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-110"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ebony via-ebony/10 to-transparent" />
-        <span className="absolute left-6 top-4 font-serif text-[5.5rem] leading-none text-outline">
-          0{index + 1}
-        </span>
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-deep via-navy-deep/10 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-6">
-          <h3 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl">{dish.name}</h3>
-          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-sand/70">{dish.description}</p>
-          <div className="mt-5 flex items-center justify-between">
-            <p>
-              <span className="text-lg font-bold text-gold">{formatGMD(dish.price)}</span>
-              <span className="ml-2 text-xs text-sand/50">{formatEUR(dish.price)}</span>
-            </p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-apricot">
+            0{index + 1} · {categoryLabel.get(dish.category)}
+          </p>
+          <h3 className="mt-2 font-serif text-3xl font-semibold leading-tight">{dish.name}</h3>
+          <div className="mt-3 flex items-end justify-between gap-4">
+            <p className="line-clamp-2 text-sm leading-relaxed text-sand/70">{dish.description}</p>
             <button
               type="button"
               onClick={(e) => {
@@ -148,7 +146,7 @@ function SignatureCard({ dish, index }: { dish: Dish; index: number }) {
                 onAdd();
               }}
               aria-label={`Add ${dish.name} to order`}
-              className="grid size-12 place-items-center rounded-full bg-clay text-white transition duration-500 hover:rotate-90 hover:bg-gold hover:text-ink"
+              className="grid size-12 shrink-0 place-items-center rounded-full bg-apricot text-navy-deep transition duration-500 hover:rotate-90 hover:bg-sand"
             >
               <Plus size={20} />
             </button>

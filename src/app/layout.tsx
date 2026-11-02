@@ -20,40 +20,33 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} · Senegambia, Kololi — Coastal Kitchen & Grill`,
+    default: `${site.name} · Kololi, The Gambia — Breakfast, Lunch & Dinner`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
   keywords: [
     "Maya's Resto",
-    "Senegambia restaurant",
     "Kololi restaurant",
-    "The Gambia dining",
-    "steakhouse Gambia",
-    "seafood Kololi",
-    "vegan Gambia",
-    "cocktails Senegambia",
+    "Oasis Complex Kololi",
+    "Bertil Harding Highway restaurant",
+    "breakfast Kololi",
+    "vegetarian Gambia",
+    "manakish Gambia",
+    "restaurants in The Gambia",
   ],
   openGraph: {
     type: "website",
-    title: `${site.name} · Senegambia Strip, Kololi`,
-    description: site.description,
+    title: `${site.name} · The Oasis Complex, Kololi`,
+    description: site.tagline,
     siteName: site.name,
     locale: "en_GB",
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?auto=format&fit=crop&w=1200&h=630&q=75",
-        width: 1200,
-        height: 630,
-        alt: "Garden dining at Maya's Resto",
-      },
-    ],
+    images: [{ url: "/images/manakish-terrace.webp", width: 512, height: 640, alt: "Manakish and labneh on the terrace at Maya's Resto" }],
   },
   twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#141518",
+  themeColor: "#06143a",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -64,8 +57,10 @@ const jsonLd = {
   "@type": "Restaurant",
   name: site.name,
   description: site.description,
-  servesCuisine: ["Mediterranean", "Argentinian", "Seafood", "Vegan", "West African"],
-  priceRange: "$$",
+  slogan: site.tagline,
+  image: `${site.url}/brand/logo.png`,
+  telephone: "+220 277 7737",
+  servesCuisine: ["Fusion", "Middle Eastern", "Breakfast", "Vegetarian-friendly"],
   address: {
     "@type": "PostalAddress",
     streetAddress: site.address.line1,
@@ -81,7 +76,7 @@ const jsonLd = {
     },
   ],
   acceptsReservations: true,
-  sameAs: [site.socials.instagram.url, site.socials.facebook.url],
+  sameAs: [site.socials.instagram.url, site.socials.directory.url],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

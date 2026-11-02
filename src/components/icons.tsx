@@ -22,68 +22,9 @@ export function InstagramIcon({ size = 20, ...props }: IconProps) {
   );
 }
 
-export function FacebookIcon({ size = 20, ...props }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M13.5 21.95V14.2h2.6l.39-3.02H13.5V9.25c0-.87.24-1.47 1.5-1.47h1.6V5.08a21.4 21.4 0 0 0-2.33-.12c-2.3 0-3.88 1.4-3.88 3.98v2.23H7.78v3.02h2.6v7.76C5.6 21.2 2 17.03 2 12 2 6.48 6.48 2 12 2s10 4.48 10 10c0 5.03-3.72 9.2-8.5 9.95Z" />
-    </svg>
-  );
-}
-
-export function TripadvisorIcon({ size = 20, ...props }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={1.7} aria-hidden="true" {...props}>
-      <circle cx="6.8" cy="13.2" r="3.9" />
-      <circle cx="17.2" cy="13.2" r="3.9" />
-      <circle cx="6.8" cy="13.2" r="1.2" fill="currentColor" stroke="none" />
-      <circle cx="17.2" cy="13.2" r="1.2" fill="currentColor" stroke="none" />
-      <path d="M2.2 8.4h3.3M18.5 8.4h3.3M5.2 8.6C7.2 7 9.5 6.3 12 6.3s4.8.7 6.8 2.3M12 13.2v.1M10.4 17.1 12 19l1.6-1.9" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-const RAYS = Array.from({ length: 12 }, (_, i) => {
-  const a = (i * Math.PI) / 6;
-  const r1 = i % 2 ? 9.4 : 8.6;
-  const r2 = i % 2 ? 11 : 12.2;
-  const p = (r: number) => `${(16 + r * Math.cos(a)).toFixed(2)} ${(16 + r * Math.sin(a)).toFixed(2)}`;
-  return `M${p(r1)}L${p(r2)}`;
-}).join("");
-
-/**
- * Maya's sun mark. The rays turn slowly and the outer ring counter-rotates;
- * both speed up when a parent with `group` is hovered.
- */
-export function BrandMark({ size = 28, className = "", ...props }: IconProps) {
-  return (
-    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" className={`brand-mark ${className}`} {...props}>
-      <defs>
-        <linearGradient id="maya-sun" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--color-gold)" />
-          <stop offset="1" stopColor="var(--color-clay)" />
-        </linearGradient>
-      </defs>
-      <circle
-        className="brand-ring"
-        cx="16"
-        cy="16"
-        r="15"
-        fill="none"
-        stroke="var(--color-brass)"
-        strokeWidth="0.9"
-        strokeDasharray="0.6 1.9"
-        strokeLinecap="round"
-      />
-      <path className="brand-rays" d={RAYS} stroke="var(--color-gold)" strokeWidth="1.15" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="6.4" fill="url(#maya-sun)" />
-      <path d="M10.6 17.6h10.8M11.6 19.6h8.8" stroke="var(--color-ebony)" strokeOpacity=".28" strokeWidth=".7" />
-    </svg>
-  );
-}
-
 /** Circular rotating type badge with any content in the middle. */
 export function RotatingBadge({
-  text = "Maya's Resto ✦ Senegambia ✦ Kololi ✦ ",
+  text = "Breakfast ✦ Lunch ✦ Dinner ✦ ",
   size = 132,
   className = "",
   children,
@@ -95,7 +36,11 @@ export function RotatingBadge({
 }) {
   return (
     <span className={`relative inline-grid place-items-center ${className}`} style={{ width: size, height: size }}>
-      <svg viewBox="0 0 100 100" className="absolute inset-0 size-full animate-[maya-spin_22s_linear_infinite] group-hover:animate-[maya-spin_7s_linear_infinite]" aria-hidden="true">
+      <svg
+        viewBox="0 0 100 100"
+        className="absolute inset-0 size-full animate-[maya-spin_22s_linear_infinite] group-hover:animate-[maya-spin_7s_linear_infinite]"
+        aria-hidden="true"
+      >
         <defs>
           <path id="badge-circle" d="M50 50m-38 0a38 38 0 1 1 76 0a38 38 0 1 1-76 0" />
         </defs>

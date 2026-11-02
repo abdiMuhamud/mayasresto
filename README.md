@@ -1,61 +1,47 @@
-# Maya's Resto — Senegambia, Kololi
+# Maya's Resto — Kololi, The Gambia
 
-Mobile-first restaurant site for Maya's Resto on the Senegambia Strip. Guests can browse the menu, build an order and book a table. Orders and bookings go out as pre-filled WhatsApp messages.
+Website for **Maya's Resto**, The Oasis Complex, Bertil Harding Highway, Kololi.
+*"When different cuisines meet, there's more than just food to share."*
+
+Guests can browse the menu, build an order and book a table. Orders and bookings go out as pre-filled WhatsApp messages to the restaurant.
 
 **Stack:** Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lenis · Zustand · lucide-react
 
+## Where the content comes from
+
+- **Brand:** the real logo (navy disc, sage leaves, apricot script) is in `public/brand/`. The site palette is taken from it.
+- **Facts:** the restaurant's Instagram ([@mayasresto](https://www.instagram.com/mayasresto/)) and its [My Gambia listing](https://www.my-gambia.com/directories/mayas-resto/). That covers the address, Breakfast · Lunch · Dinner, open Wednesday–Monday, phone +220 277 7737, the indoor dining room and outdoor terrace, and the vegetarian-friendly global fusion menu.
+- **Photos:** the restaurant's own Instagram posts, with no people in them, saved in `public/images/`.
+- **Menu:** dishes the restaurant has shown on Instagram and My Gambia, grouped by its Instagram categories (Breakfast, Tapas, Salads, Wraps, Mains, Desserts, Drinks). **No prices are published, so none are shown.** The team confirms prices on WhatsApp. To add a price to a dish, set `price` (in GMD) on it in [`src/lib/menu.ts`](src/lib/menu.ts) and it appears everywhere.
+
 ## Features
 
-- **Motion design.** First-visit intro (the sun mark spins up while a counter runs to 100), Lenis inertia scrolling, a custom cursor and magnetic buttons on desktop, a rotating sun logo and circular text badges, a film-grain overlay, and a marquee that reacts to scroll speed.
-- **Story and Signatures.** The About text lights up word by word as you scroll, with parallax images and count-up stats. On desktop the Signatures gallery pins in place and scrolls sideways; on phones it is a swipeable strip.
-- **Sticky header.** Transparent over the hero, frosted once you scroll, and it hides while you scroll down. Shows a live cart badge and a WhatsApp Quick Reserve button. On mobile, the links open in a full-screen menu.
-- **Hero.** Crossfading Ken Burns slideshow with scroll parallax, a word-by-word headline reveal, a live open/closed badge, the location tag, and two buttons: *Explore Menu* (smooth scroll) and *Book a Table via WhatsApp*.
-- **Menu.** Four category tabs (arrow keys work, and the bar stays visible while you scroll). Each dish card shows the price in dalasi with a euro equivalent, plus dietary tags. "Add to Order" pops a toast.
-- **Cart drawer.** Slides in from the right. Has + / − quantity controls and a Takeaway / Dine-in pre-order toggle. It shows the subtotal, a 10% service charge and the takeaway packaging fee, then sends the order to WhatsApp as a formatted ticket. The cart is saved in `localStorage`.
-- **Reservation form.** Opens as a bottom sheet on mobile and a centred modal on desktop. Fields: name, party size (1–12+), date and time, seating (Indoor Air-Conditioned / Garden Terrace / Lounge Bar), occasion and notes. It rejects Tuesdays, past dates and times outside opening hours (9:30 AM, last seating 9:30 PM), then opens `wa.me` with the message filled in.
-- **Location.** Google Maps embed and a "Get directions" link. Opening hours include a live *Open now* badge based on Banjul time. Links to Instagram, Facebook and Tripadvisor.
-- **SEO.** Open Graph tags and `Restaurant` JSON-LD structured data.
-- **Accessibility.** Focus trap and Escape-to-close on overlays, ARIA tabs and dialogs, and support for reduced motion.
+- **Intro:** the real logo spins in inside a rotating "Breakfast · Lunch · Dinner" ring, with leaves from the logo.
+- **Hero:** the restaurant's tagline is revealed word by word. Real photos sit in arch frames that drift with the mouse and the scroll, next to a rotating "Book a table" badge with a live open/closed status.
+- **Story:** the About text lights up as you scroll, with parallax photos of the dining room and terrace and count-up facts.
+- **From our kitchen:** a gallery of real dishes. On desktop it holds in place and scrolls sideways; on phones it swipes.
+- **Menu:** a typeset menu with sticky category tabs. On desktop, hovering a dish that has a photo shows it next to the cursor. Every dish has an add-to-order button.
+- **Order drawer:** items, quantities, takeaway or dine-in, pickup time and notes, sent as a WhatsApp ticket.
+- **Reservation form:** name, party size (1–12+), date and time (rejects Tuesdays and out-of-hours times), indoor or terrace seating, occasion and notes, sent to WhatsApp.
+- **Location:** a Google Map pinned on Maya's Resto, a weekly hours table, and links to call, WhatsApp, Instagram and the My Gambia listing.
+- **Finishing touches:** Lenis smooth scrolling, a custom cursor and magnetic buttons on desktop, a full-screen mobile menu, and support for reduced motion.
 
 ## Configure
 
-Copy `.env.example` to `.env.local` (and add the same variables in Vercel):
-
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_WHATSAPP_NUMBER` | The restaurant's WhatsApp number, digits only, e.g. `2207XXXXXX`. If unset, WhatsApp opens with the message ready and the guest picks the chat. |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | WhatsApp number, digits only (currently `2202777737`). |
 | `NEXT_PUBLIC_SITE_URL` | Public URL, used for social previews. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` | Optional email shown in the contact card. |
 
-Everything else lives in [`src/lib/config.ts`](src/lib/config.ts): hours, address, social links, service charge, packaging fee and the GMD→EUR rate. Menu items are in [`src/lib/menu.ts`](src/lib/menu.ts).
+Hours, address and links are in [`src/lib/config.ts`](src/lib/config.ts).
 
 ## Develop
 
 ```bash
 npm install
-npm run dev     # http://localhost:3000
-npm run build   # production build
-npm run lint
+npm run dev
+npm run build
 ```
 
-## Deploy to Vercel
-
-1. In Vercel, click **Add New → Project** and import `abdiMuhamud/mayasresto`. Vercel detects Next.js automatically.
-2. Under **Environment Variables**, add `NEXT_PUBLIC_WHATSAPP_NUMBER` (and optionally the others).
-3. Click **Deploy**. Every push to `main` redeploys.
-
-## Images
-
-Dish and ambience photos currently come from Unsplash (`images.unsplash.com`, allowed in `next.config.ts`). To use your own, put them in `public/` and change the `image` fields in `src/lib/menu.ts`.
-
-## Project structure
-
-```
-src/
-  app/            layout (fonts, SEO, JSON-LD), page, global styles, favicon
-  components/     Header, Hero, MenuSection, DishCard, About, Reservations,
-                  Location, Footer, CartDrawer, ReservationModal, Toaster,
-                  MobileOrderBar, Reveal, icons
-  lib/            config, menu data, WhatsApp message builders, hours, formatting, hooks
-  store/          Zustand stores: cart (persisted) and UI (drawers, toasts)
-```
+Pushing to `main` deploys to Vercel (https://mayasresto.vercel.app).
