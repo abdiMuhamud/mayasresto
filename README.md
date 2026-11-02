@@ -8,12 +8,11 @@ Mobile-first restaurant site for Maya's Resto on the Senegambia Strip. Guests ca
 
 - **Motion design.** First-visit intro (the sun mark spins up while a counter runs to 100), Lenis inertia scrolling, a custom cursor and magnetic buttons on desktop, a rotating sun logo and circular text badges, a film-grain overlay, and a marquee that reacts to scroll speed.
 - **Story and Signatures.** The About text lights up word by word as you scroll, with parallax images and count-up stats. On desktop the Signatures gallery pins in place and scrolls sideways; on phones it is a swipeable strip.
-
-- **Sticky header.** Transparent over the hero, then frosted once you scroll. Shows a live cart badge and a WhatsApp Quick Reserve button. On mobile, the links move into a menu.
+- **Sticky header.** Transparent over the hero, frosted once you scroll, and it hides while you scroll down. Shows a live cart badge and a WhatsApp Quick Reserve button. On mobile, the links open in a full-screen menu.
 - **Hero.** Crossfading Ken Burns slideshow with scroll parallax, a word-by-word headline reveal, a live open/closed badge, the location tag, and two buttons: *Explore Menu* (smooth scroll) and *Book a Table via WhatsApp*.
 - **Menu.** Four category tabs (arrow keys work, and the bar stays visible while you scroll). Each dish card shows the price in dalasi with a euro equivalent, plus dietary tags. "Add to Order" pops a toast.
 - **Cart drawer.** Slides in from the right. Has + / − quantity controls and a Takeaway / Dine-in pre-order toggle. It shows the subtotal, a 10% service charge and the takeaway packaging fee, then sends the order to WhatsApp as a formatted ticket. The cart is saved in `localStorage`.
-- **Reservation form.** Opens as a bottom sheet on mobile and a centred modal on desktop. Fields: name, party size (1–12+), date and time, seating (Indoor Air-Conditioned / Garden Terrace / Lounge Bar), occasion and notes. It rejects Tuesdays, past dates and times outside 11:30–21:30, then opens `wa.me` with the message filled in.
+- **Reservation form.** Opens as a bottom sheet on mobile and a centred modal on desktop. Fields: name, party size (1–12+), date and time, seating (Indoor Air-Conditioned / Garden Terrace / Lounge Bar), occasion and notes. It rejects Tuesdays, past dates and times outside opening hours (9:30 AM, last seating 9:30 PM), then opens `wa.me` with the message filled in.
 - **Location.** Google Maps embed and a "Get directions" link. Opening hours include a live *Open now* badge based on Banjul time. Links to Instagram, Facebook and Tripadvisor.
 - **SEO.** Open Graph tags and `Restaurant` JSON-LD structured data.
 - **Accessibility.** Focus trap and Escape-to-close on overlays, ARIA tabs and dialogs, and support for reduced motion.
