@@ -1,6 +1,7 @@
 import { site } from "./config";
+import { formatTime12 } from "./format";
 
-const toMinutes = (hhmm: string) => {
+export const toMinutes = (hhmm: string) => {
   const [h, m] = hhmm.split(":").map(Number);
   return h * 60 + m;
 };
@@ -41,7 +42,7 @@ export function validateBookingSlot(isoDate: string, time: string): string | nul
   if (isoDate < todayISO()) return "That date has already passed.";
   const t = toMinutes(time);
   if (t < toMinutes(site.hours.open) || t > toMinutes(site.hours.lastSeating)) {
-    return "Tables are available from 11:30 AM, last seating 9:30 PM.";
+    return `Tables are available from ${formatTime12(site.hours.open)}, last seating ${formatTime12(site.hours.lastSeating)}.`;
   }
   if (isoDate === todayISO() && t <= nowInBanjul().minutes) {
     return "That time has already passed today.";

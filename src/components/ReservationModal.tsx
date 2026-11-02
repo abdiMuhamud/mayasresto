@@ -117,6 +117,7 @@ export function ReservationModal() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 34 }}
+            data-lenis-prevent
             className="relative flex max-h-[94svh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[2rem] bg-sand shadow-lift outline-none sm:rounded-[2rem]"
           >
             <div className="relative shrink-0 bg-ebony px-6 pb-6 pt-7 text-sand sm:px-8">

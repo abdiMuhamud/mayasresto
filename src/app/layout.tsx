@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     locale: "en_GB",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&h=630&q=75",
+        url: "https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?auto=format&fit=crop&w=1200&h=630&q=75",
         width: 1200,
         height: 630,
-        alt: "Terrace dining at Maya's Resto",
+        alt: "Garden dining at Maya's Resto",
       },
     ],
   },
@@ -86,7 +86,15 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${jakarta.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Hide the intro before first paint if it already played this session. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem("mayas-intro")==="1")document.documentElement.dataset.intro="done"}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen antialiased">
         {children}
         <script

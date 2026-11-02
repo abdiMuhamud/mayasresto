@@ -7,6 +7,7 @@ import { useId, useMemo, useState } from "react";
 import { site } from "@/lib/config";
 import { formatEUR, formatGMD, formatTime12 } from "@/lib/format";
 import { useHydrated, useOverlay } from "@/lib/hooks";
+import { toMinutes } from "@/lib/hours";
 import { buildOrderMessage, openWhatsApp, type OrderType } from "@/lib/whatsapp";
 import { computeTotals, selectLines, useCart } from "@/store/cart";
 import { useUI } from "@/store/ui";
@@ -16,7 +17,7 @@ const orderTypes: OrderType[] = ["Takeaway", "Dine-in pre-order"];
 
 const pickupSlots = (() => {
   const out: string[] = [];
-  for (let t = 12 * 60; t <= 22 * 60; t += 15) {
+  for (let t = toMinutes(site.hours.open) + 30; t <= toMinutes(site.hours.close) - 30; t += 15) {
     out.push(`${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`);
   }
   return out;
@@ -81,6 +82,7 @@ export function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 36 }}
+            data-lenis-prevent
             className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-sand shadow-lift outline-none sm:rounded-l-[2rem]"
           >
             <header className="flex shrink-0 items-center justify-between border-b border-ink/5 px-5 py-5 sm:px-7">

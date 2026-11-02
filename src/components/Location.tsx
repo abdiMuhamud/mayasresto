@@ -97,7 +97,7 @@ export function Location() {
                         className={`flex justify-between py-1.5 ${d.day === today ? "font-semibold text-ink" : "text-taupe"}`}
                       >
                         <span>{d.day}</span>
-                        <span>{d.open ? "11:30 – 22:30" : "Closed"}</span>
+                        <span>{d.open ? `${site.hours.open} – ${site.hours.close}` : "Closed"}</span>
                       </li>
                     ))}
                   </ul>

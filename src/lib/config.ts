@@ -37,9 +37,9 @@ export const site = {
   /** The Gambia runs on GMT all year (Africa/Banjul). */
   timeZone: "Africa/Banjul",
   hours: {
-    label: "Wed – Mon: 11:30 AM – 10:30 PM",
+    label: "Wed – Mon: 9:30 AM – 10:30 PM",
     closedLabel: "Closed Tuesdays",
-    open: "11:30",
+    open: "09:30",
     close: "22:30",
     /** Last table booking accepted, in 24h time. */
     lastSeating: "21:30",

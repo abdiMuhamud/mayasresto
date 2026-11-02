@@ -32,11 +32,11 @@ export function MenuSection() {
   };
 
   return (
-    <section id="menu" className="grain relative bg-sand py-20 sm:py-28">
+    <section id="menu" className="grain relative bg-sand py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-2xl text-center">
           <SectionEyebrow>The Menu</SectionEyebrow>
-          <h2 className="font-serif text-4xl font-medium leading-[1.05] tracking-tight text-ink sm:text-6xl">
+          <h2 className="font-serif text-5xl font-medium leading-[1] tracking-tight text-ink sm:text-7xl">
             From garden, fire <em className="text-clay">&amp;</em> sea
           </h2>
           <p className="mt-5 text-base leading-relaxed text-taupe sm:text-lg">
@@ -46,7 +46,7 @@ export function MenuSection() {
         </Reveal>
 
         {/* Category tabs — horizontally scrollable on mobile */}
-        <div className="sticky top-16 z-20 -mx-4 mt-12 bg-sand/90 px-4 py-3 backdrop-blur-md sm:top-20 sm:mx-0 sm:rounded-full sm:bg-transparent sm:px-0 sm:backdrop-blur-none">
+        <div className="sticky top-[var(--header-offset,4rem)] z-20 -mx-4 mt-14 bg-sand/90 px-4 py-3 backdrop-blur-md transition-[top] duration-500 sm:mx-0 sm:rounded-full sm:bg-transparent sm:px-0 sm:backdrop-blur-none">
           <div
             ref={tabsRef}
             role="tablist"

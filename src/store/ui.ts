@@ -10,6 +10,9 @@ export interface Toast {
 }
 
 interface UIState {
+  /** True once the intro loader has finished, so the hero can play its entrance. */
+  introDone: boolean;
+  setIntroDone: () => void;
   cartOpen: boolean;
   reservationOpen: boolean;
   toasts: Toast[];
@@ -24,6 +27,8 @@ interface UIState {
 let toastId = 0;
 
 export const useUI = create<UIState>()((set, get) => ({
+  introDone: false,
+  setIntroDone: () => set({ introDone: true }),
   cartOpen: false,
   reservationOpen: false,
   toasts: [],
